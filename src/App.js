@@ -8,7 +8,7 @@ import { Route } from 'react-router-dom';
 class App extends Component {
 
   state = {
-    contacts: [],
+    contacts: []
   }
 
 componentDidMount () {
@@ -19,7 +19,6 @@ componentDidMount () {
       }))
     })
 }
-
 
 
 removeContact = (contact) => {
@@ -33,6 +32,15 @@ removeContact = (contact) => {
 
 }
 
+createContact = (contact) => {
+  ContactsAPI.create(contact)
+    .then((contact) => {
+      this.setState((currentState) => ({
+        contacts: currentState.contacts.concat([contact])
+      }))
+    })
+}
+
   render() {
     return (
       <div>
@@ -44,8 +52,14 @@ removeContact = (contact) => {
             />
         )} />
 
-      <Route path='/create' component={CreateContact}
-            />
+      <Route path='/create' render= {({ history }) => (
+          <CreateContact
+            onCreateContact={(contact) => {
+              this.createContact(contact)
+              history.push('/')
+            }}
+          />
+        )} />
       </div>
     )
   }
